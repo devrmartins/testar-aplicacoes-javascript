@@ -1,3 +1,5 @@
+import find from "lodash/find";
+
 export default class Cart {
   items = [];
   getTotal() {
@@ -6,6 +8,11 @@ export default class Cart {
     }, 0);
   }
   add(item) {
-    this.items.push(item);
+    const itemFinded = find(this.items, { product: item.product });
+    if (itemFinded) {
+      itemFinded.quantity += item.quantity;
+    } else {
+      this.items.push(item);
+    }
   }
 }
