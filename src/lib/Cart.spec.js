@@ -1,12 +1,15 @@
 import Cart from "./Cart";
 describe("Cart", () => {
-  let cart;
-  let product;
+  let cart, product, product2;
 
   beforeEach(() => {
     cart = new Cart();
     product = {
       title: "Camisa Adidas",
+      price: 8990,
+    };
+    product2 = {
+      title: "Camisa Adidas - Feminina",
       price: 8990,
     };
   });
@@ -33,5 +36,20 @@ describe("Cart", () => {
     });
 
     expect(cart.getTotal()).toBe(26970);
+  });
+  it("should update total when a product included and then removed", () => {
+    cart.add({
+      product,
+      quantity: 2,
+    });
+
+    cart.add({
+      product: product2,
+      quantity: 1,
+    });
+
+    cart.remove(product);
+
+    expect(cart.getTotal()).toBe(8990);
   });
 });
