@@ -1,6 +1,24 @@
-module.exports.queryString = (obj) => {
-  const entries = Object.entries(obj).map((item) => {
-    return `${item[0]}=${item[1]}`;
-  });
-  return entries.join("&");
+const keyValueString = ([key, value]) => {
+  if (typeof value === "object" && !Array.isArray(value))
+    throw new Error("Pelase check your params");
+
+  return `${key}=${value}`;
 };
+
+module.exports.queryString = (obj) => {
+  if (typeof obj !== "object" || Array.isArray(obj)) {
+    throw new Error("The value provided must be an object");
+  }
+  return Object.entries(obj).map(keyValueString).join("&");
+};
+
+module.exports.parse = (string) =>
+  Object.fromEntries(
+    string.split("&").map((item) => {
+      let [key, value] = item.split("=");
+      if (value.indexOf(",") > -1) {
+        value = value.split(",");
+      }
+      return [key, value];
+    })
+  );
