@@ -1,12 +1,22 @@
-import find from "lodash/find";
-
+import { find, remove } from "lodash";
 export default class Cart {
     total = 0;
     items = [];
 
     add(item) {
-        if (!find(this.items, { product: item.product })) this.items.push(item);
+        const itemToFind = { product: item.product }
+        const itemFind = find(this.items, itemToFind);
+
+        if ( itemFind ) {
+            itemFind.quantity += item.quantity
+        } else {
+            this.items.push(item);
+        }
         
+    }
+
+    getItem(product) {
+        return find(this.items, { product })
     }
 
     getTotalItems() {
@@ -18,5 +28,16 @@ export default class Cart {
             (acc, item) => acc + item.quantity * item.product.price,
             0
         );
+    }
+
+    checkout() {
+        return {
+            total: this.getTotal(),
+            items: this.items
+        }
+    }
+
+    remove(product) {
+        remove(this.items, { product })
     }
 }
